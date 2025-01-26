@@ -22,14 +22,17 @@ jobs:
       # - name: Install dependencies
       #   run: npm install 
 
-      # - name: Build the application
-      #   run: npm run build
+      - name: Export the application
+        run: npm run export  # This will generate the static files in the /out folder
+
+      - name: List contents of the out folder
+        run: ls -R out  # This will list the contents of the out folder to verify
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
-          path: .next # Path to Next.js build folder
+          path: out  # Path to the Next.js exported output folder
 
   release:
     runs-on: ubuntu-latest
@@ -47,5 +50,5 @@ jobs:
           FTP_USERNAME: ${{ secrets.AZURE_FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.AZURE_FTP_PASSWORD }}
         run: |
-          # Upload all files from the .next folder to Azure's wwwroot folder
-          curl -T "./.out/*" --ftp-create-dirs -u $FTP_USERNAME:$FTP_PASSWORD ftps://$FTP_HOST/site/wwwroot/
+          # Upload all files from the out folder to Azure's wwwroot folder
+          curl -T "./out/*" --ftp-create-dirs -u $FTP_USERNAME:$FTP_PASSWORD ftps://$FTP_HOST/site/wwwroot/

@@ -19,14 +19,11 @@ jobs:
         with:
           node-version: '16'
 
-      # - name: Install dependencies
-      #   run: npm install 
-
-     # - name: Export the application
-     #   run: npm run export  # This will generate the static files in the /out folder
+      - name: Export the application
+        run: npm run export  # This will generate the static files in the /out folder
 
       - name: List contents of the out folder
-        run: ls -R out  # This will list the contents of the out folder to verify
+        run: ls -R out  # List the contents of the out folder to verify
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
@@ -39,16 +36,15 @@ jobs:
     needs: build
 
     steps:
-      # - name: Download build artifacts
-      #   uses: actions/download-artifact@v3
-      #   with:
-      #     name: build-artifacts
-
       - name: Deploy to Azure using FTPS
         env:
           FTP_HOST: ${{ secrets.AZURE_FTP_HOST }}
           FTP_USERNAME: ${{ secrets.AZURE_FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.AZURE_FTP_PASSWORD }}
         run: |
-          # Upload all files from the out folder to Azure's wwwroot folder
-          curl -T "./out/*" --ftp-create-dirs -u $FTP_USERNAME:$FTP_PASSWORD ftps://$FTP_HOST/site/wwwroot/
+          # Ensure the out folder contains files
+          echo "Listing files in out folder:"
+          ls -R out
+
+          # Upload files from the out folder to Azure using find + curl
+          find ./out -type f -exec curl -T {} --ftp-create-dirs -u $FTP_USERNAME:$FTP_PASSWORD ftps://$FTP_HOST/site/wwwroot/{} \;

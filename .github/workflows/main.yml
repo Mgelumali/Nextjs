@@ -19,11 +19,15 @@ jobs:
         with:
           node-version: '16'
 
-      #- name: Export the application
-       #  run: npm run export  # This will generate the static files in the /out folder
+      - name: Export the application
+        run: npm run export  # This will generate the static files in the /out folder
+
+      - name: Verify if out folder exists
+        run: |
+          if [ -d "./out" ]; then echo "Out folder exists"; else echo "Out folder does not exist"; fi
 
       - name: List contents of the out folder
-        run: ls -R out  # List the contents of the out folder to verify
+        run: ls -R out  # List the contents of the out folder to verify it exists
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3

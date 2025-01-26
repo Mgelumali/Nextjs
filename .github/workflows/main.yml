@@ -48,4 +48,4 @@ jobs:
           FTP_PASSWORD: ${{ secrets.AZURE_FTP_PASSWORD }}
         run: |
           # Upload all files from the .next folder to Azure's wwwroot folder
-          curl -T "./.next/*" --ftp-create-dirs -u $FTP_USERNAME:$FTP_PASSWORD ftps://$FTP_HOST/site/wwwroot/
+          curl -T "./.out/*" --ftp-create-dirs -u $FTP_USERNAME:$FTP_PASSWORD ftps://$FTP_HOST/site/wwwroot/

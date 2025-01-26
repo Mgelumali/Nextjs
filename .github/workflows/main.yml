@@ -19,8 +19,8 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Export the application
-        run: npm run export  # This will generate the static files in the /out folder
+      #- name: Export the application
+       #  run: npm run export  # This will generate the static files in the /out folder
 
       - name: List contents of the out folder
         run: ls -R out  # List the contents of the out folder to verify
